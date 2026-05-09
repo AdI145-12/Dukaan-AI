@@ -50,3 +50,11 @@ android/keystore/
 workers/.dev.vars
 **/*.jks
 **/*.keystore
+
+# Dependencies
+node_modules/
+workers/node_modules/
+
+# Build outputs
+workers/dist/
+.wrangler/
