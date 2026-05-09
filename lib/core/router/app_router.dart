@@ -48,25 +48,35 @@ final GlobalKey<NavigatorState> _accountNavKey =
     GlobalKey<NavigatorState>(debugLabel: 'account');
 
 Future<bool> _hasShopProfile(String userId) async {
-  final dynamic snapshot =
-      await FirebaseService.db.collection('users').doc(userId).get();
-  final bool exists = snapshot.exists as bool? ?? false;
-  if (!exists) {
+  try {
+    final dynamic snapshot = await FirebaseService.db
+        .collection('users')
+        .doc(userId)
+        .get()
+        .timeout(
+          const Duration(seconds: 5),
+          onTimeout: () => throw Exception('Firestore timeout'),
+        );
+    final bool exists = snapshot.exists as bool? ?? false;
+    if (!exists) return false;
+
+    final dynamic raw = snapshot.data();
+    Map<String, dynamic> data = <String, dynamic>{};
+    if (raw is Map<String, dynamic>) {
+      data = raw;
+    } else if (raw is Map<Object?, Object?>) {
+      data = raw.map<String, dynamic>(
+        (Object? key, Object? value) => MapEntry(key.toString(), value),
+      );
+    }
+
+    final String shopName = data['shopName'] as String? ?? '';
+    return shopName.trim().isNotEmpty;
+  } catch (_) {
+    // On any error (network, timeout, auth) — treat as no profile
+    // so the user lands on onboarding rather than being stuck forever.
     return false;
   }
-
-  final dynamic raw = snapshot.data();
-  Map<String, dynamic> data = <String, dynamic>{};
-  if (raw is Map<String, dynamic>) {
-    data = raw;
-  } else if (raw is Map<Object?, Object?>) {
-    data = raw.map<String, dynamic>(
-      (Object? key, Object? value) => MapEntry(key.toString(), value),
-    );
-  }
-
-  final String shopName = data['shopName'] as String? ?? '';
-  return shopName.trim().isNotEmpty;
 }
 
 @riverpod
