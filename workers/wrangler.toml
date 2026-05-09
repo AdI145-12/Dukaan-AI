@@ -1,3 +1,8 @@
+name = "dukaan-ai-worker"
+main = "src/index.ts"
+compatibility_date = "2026-05-09"
+compatibility_flags = ["nodejs_compat"]
+
 [triggers]
 crons = ["30 2 * * *"]
 
