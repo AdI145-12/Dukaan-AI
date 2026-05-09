@@ -16,6 +16,12 @@ val keyProperties = Properties().apply {
     }
 }
 
+val hasKeyProperties = keyPropertiesFile.exists()
+    && keyProperties["keyAlias"] != null
+    && keyProperties["keyPassword"] != null
+    && keyProperties["storeFile"] != null
+    && keyProperties["storePassword"] != null
+
 android {
     namespace = "com.dukaanai.app"
     compileSdk = 36
@@ -42,7 +48,7 @@ android {
 
     signingConfigs {
         create("release") {
-            if (keyPropertiesFile.exists()) {
+            if (hasKeyProperties) {
                 keyAlias = keyProperties["keyAlias"] as String
                 keyPassword = keyProperties["keyPassword"] as String
                 storeFile = file(keyProperties["storeFile"] as String)
@@ -53,7 +59,7 @@ android {
 
     buildTypes {
         release {
-            signingConfig = if (keyPropertiesFile.exists()) {
+            signingConfig = if (hasKeyProperties) {
                 signingConfigs.getByName("release")
             } else {
                 signingConfigs.getByName("debug")
@@ -64,6 +70,9 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
+        }
+        debug {
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
 }
@@ -76,15 +85,11 @@ dependencies {
         // Import the Firebase BoM
         implementation(platform("com.google.firebase:firebase-bom:34.11.0"))
 
-
-        // TODO: Add the dependencies for Firebase products you want to use
-        // When using the BoM, don't specify versions in Firebase dependencies
         implementation("com.google.firebase:firebase-analytics")
 
         implementation("com.google.firebase:firebase-auth")
 
         coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
 
-        // Add the dependencies for any other desired Firebase products
         // https://firebase.google.com/docs/android/setup#available-libraries
 }
