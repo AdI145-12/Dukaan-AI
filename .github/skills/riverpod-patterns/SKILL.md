@@ -85,13 +85,13 @@ Future<GeneratedAd> adDetail(AdDetailRef ref, String adId) async {
 // Usage: ref.watch(adDetailProvider('some-uuid'))
 ```
 
-## StreamProvider Pattern (for Supabase Realtime)
+## StreamProvider Pattern (for Firestore Realtime)
 
 ```dart
 @riverpod
 Stream<List<KhataEntry>> khataEntries(KhataEntriesRef ref) {
   final repo = ref.watch(khataRepositoryProvider);
-  return repo.watchEntries(); // returns Stream from Supabase .stream()
+  return repo.watchEntries(); // returns Stream from Firestore snapshots()
 }
 ```
 
@@ -102,9 +102,8 @@ Repositories are always declared as simple providers:
 ```dart
 @riverpod
 FeatureRepository featureRepository(FeatureRepositoryRef ref) {
-  final supabase = ref.watch(supabaseClientProvider);
   final cloudflare = ref.watch(cloudflareClientProvider);
-  return FeatureRepositoryImpl(supabase: supabase, cloudflare: cloudflare);
+  return FeatureRepositoryImpl(cloudflare: cloudflare);
 }
 ```
 

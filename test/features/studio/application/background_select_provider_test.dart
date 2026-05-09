@@ -1,5 +1,5 @@
 import 'package:dukaan_ai/core/errors/app_exception.dart';
-import 'package:dukaan_ai/core/providers/shared_providers.dart';
+import 'package:dukaan_ai/core/firebase/firebase_service.dart';
 import 'package:dukaan_ai/features/studio/application/background_select_provider.dart';
 import 'package:dukaan_ai/features/studio/application/background_select_state.dart';
 import 'package:dukaan_ai/features/studio/domain/ad_creation_request.dart';
@@ -8,18 +8,23 @@ import 'package:dukaan_ai/features/studio/infrastructure/ad_generation_service.d
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class MockAdGenerationService extends Mock implements AdGenerationService {}
 
-class MockSupabaseClient extends Mock implements SupabaseClient {}
+class _FakeUser {
+  const _FakeUser(this.uid);
 
-class MockGoTrueClient extends Mock implements GoTrueClient {}
+  final String uid;
+}
+
+class _FakeAuth {
+  const _FakeAuth({this.currentUser});
+
+  final _FakeUser? currentUser;
+}
 
 void main() {
   late MockAdGenerationService mockAdGenerationService;
-  late MockSupabaseClient mockSupabaseClient;
-  late MockGoTrueClient mockGoTrueClient;
 
   setUpAll(() {
     registerFallbackValue(
@@ -32,23 +37,21 @@ void main() {
   });
 
   setUp(() {
+    FirebaseService.clearOverrides();
+    FirebaseService.setAuthOverride(
+      const _FakeAuth(currentUser: _FakeUser('user-1')),
+    );
     mockAdGenerationService = MockAdGenerationService();
-    mockSupabaseClient = MockSupabaseClient();
-    mockGoTrueClient = MockGoTrueClient();
-
-    when(() => mockSupabaseClient.auth).thenReturn(mockGoTrueClient);
   });
 
-  ProviderContainer createContainer({User? currentUser}) {
-    when(() => mockGoTrueClient.currentUser)
-        .thenReturn(currentUser ?? _userWithId('user-1'));
+  tearDown(FirebaseService.clearOverrides);
 
+  ProviderContainer createContainer() {
     final ProviderContainer container = ProviderContainer(
       overrides: [
         adGenerationServiceProvider.overrideWith(
           (Ref ref) => mockAdGenerationService,
         ),
-        supabaseClientProvider.overrideWith((Ref ref) => mockSupabaseClient),
       ],
     );
     addTearDown(container.dispose);
@@ -176,12 +179,3 @@ GeneratedAd _testGeneratedAd({required String id}) {
   );
 }
 
-User _userWithId(String userId) {
-  return User(
-    id: userId,
-    appMetadata: const <String, Object?>{},
-    userMetadata: const <String, Object?>{},
-    aud: 'authenticated',
-    createdAt: DateTime(2026, 1, 1).toIso8601String(),
-  );
-}

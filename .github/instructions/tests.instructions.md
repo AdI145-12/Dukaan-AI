@@ -54,7 +54,7 @@ test('description of expected behavior', () async {
 
 ## What Must NOT Be Tested
 - Flutter framework widgets (Text, Container, etc.)
-- Supabase client directly (mock the repository, not the client)
+- Firebase client directly (mock the repository, not the client)
 - Cloudflare Worker internals (test via handler unit tests)
 - UI pixel-perfect layout
 

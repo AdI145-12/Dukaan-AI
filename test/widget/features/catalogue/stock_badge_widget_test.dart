@@ -92,7 +92,7 @@ void main() {
   testWidgets('renders without overflow at 12x12 base dot dimensions',
       (WidgetTester tester) async {
     await tester.pumpWidget(
-      MaterialApp(
+      const MaterialApp(
         home: Scaffold(
           body: SizedBox(
             width: 40,

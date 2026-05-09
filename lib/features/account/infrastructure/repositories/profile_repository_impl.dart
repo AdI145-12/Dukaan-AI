@@ -1,1 +1,1 @@
-// Supabase profiles table impl
+// Firestore profiles repository stub

@@ -1,1 +1,0 @@
-export 'supabase_constants.dart' show SupabaseColumns;

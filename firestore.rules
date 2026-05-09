@@ -44,8 +44,8 @@ service cloud.firestore {
 
     // transactions/{txId}
     match /transactions/{txId} {
-      allow create: if isOwnerByField(request.resource.data);
-      allow read, update, delete: if isOwnerByField(resource.data);
+      allow read: if isOwnerByField(resource.data);
+      allow write: if false; // written only by Worker via Admin SDK
     }
 
     // usageEvents/{eventId}

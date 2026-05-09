@@ -7,7 +7,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dukaan_ai/core/constants/app_routes.dart';
 import 'package:dukaan_ai/core/constants/app_strings.dart';
 import 'package:dukaan_ai/core/errors/app_exception.dart';
-import 'package:dukaan_ai/core/providers/shared_providers.dart';
+import 'package:dukaan_ai/core/firebase/firebase_service.dart';
 import 'package:dukaan_ai/core/theme/app_colors.dart';
 import 'package:dukaan_ai/core/theme/app_spacing.dart';
 import 'package:dukaan_ai/core/theme/app_typography.dart';
@@ -80,8 +80,7 @@ class _AdPreviewScreenState extends ConsumerState<AdPreviewScreen> {
 
   /// Tracks ad generation analytics without blocking user actions.
   void _trackAnalytics() {
-    final String userId =
-        ref.read(supabaseClientProvider).auth.currentUser?.id ?? '';
+    final String userId = FirebaseService.currentUserId ?? '';
     if (userId.isEmpty) {
       return;
     }
@@ -192,8 +191,7 @@ class _AdPreviewScreenState extends ConsumerState<AdPreviewScreen> {
       _imageBytes = null;
     });
 
-    final String userId =
-        ref.read(supabaseClientProvider).auth.currentUser?.id ?? '';
+    final String userId = FirebaseService.currentUserId ?? '';
 
     try {
       final AdGenerationService service = ref.read(adGenerationServiceProvider);
@@ -223,8 +221,7 @@ class _AdPreviewScreenState extends ConsumerState<AdPreviewScreen> {
 
   Future<void> _generateCaptionInBackground([String? language]) async {
     final String lang = language ?? _selectedLanguage;
-    final String userId =
-        ref.read(supabaseClientProvider).auth.currentUser?.id ?? '';
+    final String userId = FirebaseService.currentUserId ?? '';
     if (userId.isEmpty) {
       return;
     }

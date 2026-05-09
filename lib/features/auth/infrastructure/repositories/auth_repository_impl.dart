@@ -1,1 +1,1 @@
-// Supabase OTP impl, profile creation
+// Firebase phone auth and profile creation

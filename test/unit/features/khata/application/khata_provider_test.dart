@@ -1,4 +1,4 @@
-import 'package:dukaan_ai/core/providers/shared_providers.dart';
+import 'package:dukaan_ai/core/firebase/firebase_service.dart';
 import 'package:dukaan_ai/features/khata/application/khata_provider.dart';
 import 'package:dukaan_ai/features/khata/domain/khata_entry.dart';
 import 'package:dukaan_ai/features/khata/domain/repositories/khata_repository.dart';
@@ -6,33 +6,38 @@ import 'package:dukaan_ai/features/khata/infrastructure/khata_repository_impl.da
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class MockKhataRepository extends Mock implements KhataRepository {}
 
-class MockSupabaseClient extends Mock implements SupabaseClient {}
+class _FakeUser {
+	const _FakeUser(this.uid);
 
-class MockGoTrueClient extends Mock implements GoTrueClient {}
+	final String uid;
+}
+
+class _FakeAuth {
+	const _FakeAuth({this.currentUser});
+
+	final _FakeUser? currentUser;
+}
 
 void main() {
 	late MockKhataRepository mockRepo;
-	late MockSupabaseClient mockSupabaseClient;
-	late MockGoTrueClient mockGoTrueClient;
 
 	setUp(() {
+		FirebaseService.clearOverrides();
+		FirebaseService.setAuthOverride(
+			const _FakeAuth(currentUser: _FakeUser('user-1')),
+		);
 		mockRepo = MockKhataRepository();
-		mockSupabaseClient = MockSupabaseClient();
-		mockGoTrueClient = MockGoTrueClient();
-
-		when(() => mockSupabaseClient.auth).thenReturn(mockGoTrueClient);
-		when(() => mockGoTrueClient.currentUser).thenReturn(_testUser());
 	});
+
+	tearDown(FirebaseService.clearOverrides);
 
 	ProviderContainer createContainer() {
 		final ProviderContainer container = ProviderContainer(
 			overrides: [
 				khataRepositoryProvider.overrideWithValue(mockRepo),
-				supabaseClientProvider.overrideWith((Ref ref) => mockSupabaseClient),
 			],
 		);
 		addTearDown(container.dispose);
@@ -147,14 +152,4 @@ void main() {
 			verify(() => mockRepo.updateAmount(id: 'e1', newAmount: 900)).called(1);
 		});
 	});
-}
-
-User _testUser() {
-	return User(
-		id: 'user-1',
-		appMetadata: const <String, Object?>{},
-		userMetadata: const <String, Object?>{},
-		aud: 'authenticated',
-		createdAt: DateTime(2026, 1, 1).toIso8601String(),
-	);
 }

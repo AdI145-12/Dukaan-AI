@@ -21,14 +21,14 @@ description: >
 ```typescript
 // Declared in workers/src/types/env.ts
 interface Env {
-  SUPABASE_URL: string;
-  SUPABASE_SERVICE_KEY: string;    // Service role key — bypasses RLS
-  AI_ENGINE_API_KEY: string;       // Background removal API
-  REPLICATE_API_TOKEN: string;     // Flux image generation
-  OPENAI_API_KEY: string;          // GPT-4o-mini captions
+  FIREBASE_PROJECT_ID: string;
+  FIREBASE_CLIENT_EMAIL: string;
+  FIREBASE_PRIVATE_KEY: string;
+  AIENGINEAPIKEY: string;          // Background removal API
+  REPLICATEAPITOKEN: string;       // Flux image generation
+  OPENAIAPIKEY: string;            // GPT captions
   RAZORPAY_KEY_ID: string;
-  RAZORPAY_KEY_SECRET: string;
-  FCM_SERVER_KEY: string;
+  RAZORPAY_SECRET: string;
   RATE_LIMIT_KV: KVNamespace;      // Cloudflare KV for rate limiting
 }
 ```
@@ -142,15 +142,9 @@ export default {
 // workers/src/middleware/auth.ts
 export async function verifyUser(userId: string | null, env: Env): Promise<boolean> {
   if (!userId) return false;
-  // Verify user exists in Supabase using service key
-  const res = await fetch(`${env.SUPABASE_URL}/rest/v1/profiles?id=eq.${userId}&select=id`, {
-    headers: {
-      'apikey': env.SUPABASE_SERVICE_KEY,
-      'Authorization': `Bearer ${env.SUPABASE_SERVICE_KEY}`,
-    },
-  });
-  const rows = await res.json() as { id: string }[];
-  return rows.length > 0;
+  // Verify user exists in Firestore or via Firebase Auth token verification.
+  const res = await fetch(`https://firestore.googleapis.com/v1/projects/${env.FIREBASE_PROJECT_ID}/databases/(default)/documents/users/${userId}`);
+  return res.ok;
 }
 ```
 

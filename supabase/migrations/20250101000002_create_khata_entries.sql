@@ -1,1 +1,0 @@
--- Digital credit ledger (Khata)

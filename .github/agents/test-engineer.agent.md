@@ -56,7 +56,7 @@ void main() {
 
 ## What You Never Do
 
-- Write tests that call real Supabase or Razorpay APIs
+- Write tests that call real Firebase or Razorpay APIs
 - Skip the error state test case
 - Use `sleep()` or `Future.delayed()` in tests — use `fakeAsync` instead
 - Write tests that depend on execution order (each test must be independent)

@@ -4,7 +4,6 @@ sealed class AppException implements Exception {
 	final String message;
 
 	String get userMessage => switch (this) {
-		SupabaseAppException() => message,
 		FirebaseAppException() => message,
 		StorageAppException() => message,
 		NetworkAppException() => message,
@@ -15,7 +14,6 @@ sealed class AppException implements Exception {
 		UnknownAppException() => message,
 	};
 
-	const factory AppException.supabase(String message) = SupabaseAppException;
 	const factory AppException.firebase(String message) = FirebaseAppException;
 	const factory AppException.storage(String message) = StorageAppException;
 	const factory AppException.network(String message) = NetworkAppException;
@@ -24,10 +22,6 @@ sealed class AppException implements Exception {
 	const factory AppException.workerRateLimit(String message) = WorkerRateLimitAppException;
 	const factory AppException.workerError(String message) = WorkerErrorAppException;
 	const factory AppException.unknown(String message) = UnknownAppException;
-}
-
-final class SupabaseAppException extends AppException {
-	const SupabaseAppException(super.message);
 }
 
 final class FirebaseAppException extends AppException {

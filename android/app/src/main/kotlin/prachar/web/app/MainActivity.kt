@@ -1,4 +1,4 @@
-package prachar.web.app
+package com.dukaanai.app
 
 import io.flutter.embedding.android.FlutterActivity
 

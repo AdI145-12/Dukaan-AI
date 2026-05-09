@@ -1,1 +1,0 @@
-// Supabase admin client for Edge Functions

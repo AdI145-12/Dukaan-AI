@@ -67,7 +67,7 @@ when(() => mockRepo.createAd(any())).thenAnswer((_) async => testGeneratedAd);
 
 // 4. Stub error response
 when(() => mockRepo.createAd(any())).thenThrow(
-  AppException.supabase('DB error'),
+  AppException.firebase('DB error'),
 );
 
 // 5. Verify call

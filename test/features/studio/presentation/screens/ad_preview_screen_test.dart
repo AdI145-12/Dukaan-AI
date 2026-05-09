@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:dukaan_ai/core/constants/app_strings.dart';
 import 'package:dukaan_ai/core/firebase/firebase_service.dart';
-import 'package:dukaan_ai/core/providers/shared_providers.dart';
 import 'package:dukaan_ai/features/studio/application/studio_provider.dart';
 import 'package:dukaan_ai/features/studio/domain/ad_creation_request.dart';
 import 'package:dukaan_ai/features/studio/domain/ad_preview_args.dart';
@@ -18,13 +17,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class MockAdGenerationService extends Mock implements AdGenerationService {}
-
-class MockSupabaseClient extends Mock implements SupabaseClient {}
-
-class MockGoTrueClient extends Mock implements GoTrueClient {}
 
 class MockCaptionService extends Mock implements CaptionService {}
 
@@ -141,15 +135,10 @@ void main() {
     MockCaptionService? captionService,
   }) async {
     // Arrange
-    final MockSupabaseClient mockSupabaseClient = MockSupabaseClient();
-    final MockGoTrueClient mockGoTrueClient = MockGoTrueClient();
     final MockAdGenerationService mockService =
         adGenerationService ?? MockAdGenerationService();
     final MockCaptionService mockResolvedCaptionService =
         captionService ?? mockCaptionService;
-
-    when(() => mockSupabaseClient.auth).thenReturn(mockGoTrueClient);
-    when(() => mockGoTrueClient.currentUser).thenReturn(_testUser());
     when(() => mockService.generateAd(any()))
         .thenAnswer((_) async => _testAd(id: 'regenerated-ad'));
 
@@ -170,7 +159,6 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          supabaseClientProvider.overrideWith((Ref ref) => mockSupabaseClient),
           studioRepositoryProvider.overrideWithValue(
             FakeStudioRepository(profile: profile),
           ),
@@ -407,15 +395,5 @@ UserProfile _profileWithTier(String tier) {
     tier: tier,
     creditsRemaining: 3,
     language: 'hinglish',
-  );
-}
-
-User _testUser() {
-  return User(
-    id: 'user-1',
-    appMetadata: const <String, Object?>{},
-    userMetadata: const <String, Object?>{},
-    aud: 'authenticated',
-    createdAt: DateTime(2026, 1, 1).toIso8601String(),
   );
 }

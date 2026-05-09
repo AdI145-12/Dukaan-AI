@@ -8,7 +8,7 @@ Generates AI-powered product ads, manages customer credit (Khata), and shares to
 - **Flutter 3.x / Dart** — Android-only, min SDK 21
 - **State Management** — Riverpod ONLY (no Provider, Bloc, GetX, setState)
 - **Navigation** — GoRouter ONLY (no Navigator.push directly)
-- **Backend/Auth/DB** — Supabase (Flutter SDK)
+- **Backend/Auth/DB** — Firebase (Auth + Firestore + Storage)
 - **Serverless AI** — Cloudflare Workers (JavaScript/TypeScript)
 - **Payments** — Razorpay Flutter SDK
 - **Push Notifications** — Firebase Cloud Messaging (FCM)
@@ -16,16 +16,16 @@ Generates AI-powered product ads, manages customer credit (Khata), and shares to
 ## Folder Conventions
 ```
 lib/
-  core/           # App-wide: router, theme, constants, supabase client
+  core/           # App-wide: router, theme, constants, firebase service
   features/       # One folder per feature (studio, khata, account, pricing)
     <feature>/
       presentation/   # Screens + Widgets only
       application/    # Riverpod providers + notifiers
       domain/         # Models, enums, interfaces
-      infrastructure/ # Repositories (Supabase calls)
+      infrastructure/ # Repositories (Firestore calls)
   shared/         # Reusable widgets, utils, extensions
 workers/          # Cloudflare Workers (one file per endpoint)
-supabase/
+firebase.json
   migrations/     # SQL migration files
   functions/      # Edge Functions (Deno)
 test/             # Unit + widget tests
@@ -42,7 +42,7 @@ test/             # Unit + widget tests
 ## Anti-Hallucination Contract
 Do NOT invent:
 - Package APIs or SDK methods not verified in pubspec.yaml
-- Supabase table names, column names, or RLS policies
+- Firestore collection names, document field names, or security rules
 - Environment variable names
 - GoRouter route names (use `AppRoutes` constants)
 - Riverpod provider names

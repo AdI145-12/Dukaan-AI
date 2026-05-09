@@ -62,8 +62,8 @@ AppRadius.chip   // 20.0
 // ALWAYS handle errors like this in providers:
 try {
   // operation
-} on PostgrestException catch (e) {
-  throw AppException.supabase(e.message);
+} on FirebaseException catch (e) {
+  throw AppException.firebase(e.message ?? AppStrings.errorGeneric);
 } on StorageException catch (e) {
   throw AppException.storage(e.message);
 } catch (e) {
@@ -76,12 +76,12 @@ try {
 }
 ```
 
-## Supabase in Flutter
-- Supabase client singleton: `lib/core/supabase/supabase_client.dart` — use `SupabaseClient.instance`
-- ALWAYS specify columns in select: `.select('id, user_id, image_url, created_at')`
-- NEVER use `.select('*')`
-- For real-time: use `stream()` method, not `.on()` deprecated API
-- Auth state: `ref.watch(authStateProvider)` — never access `supabase.auth.currentUser` directly in widgets
+## Firebase in Flutter
+- Firebase service wrapper: `lib/core/firebase/firebase_service.dart` — use `FirebaseService.db` and `FirebaseService.currentUserId`
+- ALWAYS specify Firestore fields explicitly in queries and reads
+- NEVER use wildcard reads or writes when a narrow document path works
+- For real-time: use Firestore `snapshots()` via repository streams
+- Auth state: use `FirebaseService.currentUserId` in widgets and providers; never access `FirebaseAuth.instance.currentUser` directly in widgets
 
 ## Localization
 - All user-facing strings in: `lib/core/constants/app_strings.dart`

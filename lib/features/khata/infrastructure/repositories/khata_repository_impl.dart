@@ -1,1 +1,1 @@
-// Supabase realtime stream listening
+// Firestore realtime stream listening

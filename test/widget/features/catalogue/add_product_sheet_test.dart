@@ -10,7 +10,6 @@ import 'package:dukaan_ai/features/catalogue/presentation/widgets/add_product_sh
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -100,18 +99,6 @@ void main() {
           ),
         ),
       ),
-    );
-  }
-
-  XFile createValidImageFile() {
-    final img.Image image = img.Image(width: 2, height: 2);
-    final Uint8List encoded =
-        Uint8List.fromList(img.encodeJpg(image, quality: 90));
-
-    return XFile.fromData(
-      encoded,
-      name: 'test-image.jpg',
-      mimeType: 'image/jpeg',
     );
   }
 

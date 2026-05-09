@@ -1,6 +1,11 @@
-# Copy this file to key.properties and fill in real signing values.
-# Never commit key.properties to git.
-storePassword=YOUR_KEYSTORE_PASSWORD
+Copy this file to android/key.properties and fill in real values.
+NEVER commit android/key.properties — it is gitignored.
+
+Generate a keystore using:
+keytool -genkey -v -keystore android/keystore/dukaan-ai-release.jks \
+	-alias dukaan-ai -keyalg RSA -keysize 2048 -validity 10000
+
+storeFile=../keystore/dukaan-ai-release.jks
+storePassword=YOUR_STORE_PASSWORD
+keyAlias=dukaan-ai
 keyPassword=YOUR_KEY_PASSWORD
-keyAlias=YOUR_KEY_ALIAS
-storeFile=../keystore/dukaan_ai_release.jks

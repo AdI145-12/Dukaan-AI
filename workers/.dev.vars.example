@@ -1,1 +1,21 @@
-// Local dev env vars template
+# Copy to workers/.dev.vars and fill in real values.
+# Never commit workers/.dev.vars.
+
+# Firebase Service Account (from Firebase Console > Project Settings > Service Accounts)
+FIREBASE_PROJECT_ID=dukaanai-68da7
+FIREBASE_API_KEY=
+FIREBASE_CLIENT_EMAIL=
+FIREBASE_PRIVATE_KEY=
+
+# AI APIs
+AIENGINEAPIKEY=
+REPLICATEAPITOKEN=
+OPENAIAPIKEY=
+
+# Razorpay (from dashboard.razorpay.com)
+RAZORPAY_KEY_ID=
+RAZORPAY_SECRET=
+
+# OpenRouter (optional — leave blank to use OpenAI directly)
+OPENROUTER_API_KEY=
+OPENROUTER_MODEL=mistralai/mistral-7b-instruct

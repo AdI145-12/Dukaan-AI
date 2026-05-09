@@ -10,7 +10,7 @@ workers/
   src/
     handlers/     # One file per route handler
     middleware/   # Auth, rate limiting, CORS
-    services/     # Reusable service logic (razorpay, openai, supabase)
+    services/     # Reusable service logic (razorpay, openai, firebase)
     utils/        # Shared utilities
     types/        # TypeScript interfaces
   wrangler.toml   # Cloudflare config
@@ -20,7 +20,7 @@ workers/
 ```typescript
 export async function handleXxx(request: Request, env: Env): Promise<Response> {
   // 1. Parse & validate input first
-  // 2. Auth check (verify user_id against Supabase)
+  // 2. Auth check (verify user_id against Firebase)
   // 3. Rate limit check (KV-based)
   // 4. Core logic
   // 5. Return standardized response
@@ -65,8 +65,10 @@ REPLICATE_API_KEY    — Replicate API key (generative backgrounds)
 OPENAI_API_KEY       — OpenAI API key (captions)
 RAZORPAY_KEY_ID      — Razorpay key ID
 RAZORPAY_SECRET      — Razorpay secret
-SUPABASE_URL         — Supabase project URL
-SUPABASE_SERVICE_KEY — Supabase service role key (NOT anon key)
+FIREBASE_PROJECT_ID   — Firebase project ID
+FIREBASE_API_KEY      — Firebase API key
+FIREBASE_CLIENT_EMAIL — Firebase service account client email
+FIREBASE_PRIVATE_KEY  — Firebase service account private key
 RATE_LIMIT_KV        — KV namespace binding
 CACHE_KV             — KV namespace binding for response caching
 ```
@@ -75,15 +77,14 @@ CACHE_KV             — KV namespace binding for response caching
 - Never run image processing or ML models directly in a Worker (CPU limit)
 - Never store secrets in code — always use `env.VARIABLE_NAME`
 - Never use Node.js-specific APIs (`fs`, `path`, `Buffer` as Node module) — use Web APIs
-- Never make Supabase calls without the service key (anon key has RLS restrictions)
+- Never make direct database calls without the Firebase service account
 
-## Supabase Calls from Workers
+## Firestore Calls from Workers
 ```typescript
-// Always use this pattern — never import full SDK
-const response = await fetch(`${env.SUPABASE_URL}/rest/v1/profiles?id=eq.${userId}&select=id,tier,credits_remaining`, {
+// Always use this pattern — keep direct Firestore REST access behind a helper
+const response = await fetch(`https://firestore.googleapis.com/v1/projects/${env.FIREBASE_PROJECT_ID}/databases/(default)/documents/users/${userId}`, {
   headers: {
-    'apikey': env.SUPABASE_SERVICE_KEY,
-    'Authorization': `Bearer ${env.SUPABASE_SERVICE_KEY}`,
+    'Authorization': `Bearer ${env.FIREBASE_PRIVATE_KEY}`,
   }
 });
 ```

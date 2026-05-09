@@ -1,4 +1,4 @@
-import 'package:dukaan_ai/core/constants/supabase_constants.dart';
+import 'package:dukaan_ai/core/constants/firestore_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'generated_ad.freezed.dart';
@@ -20,16 +20,16 @@ abstract class GeneratedAd with _$GeneratedAd {
   }) = _GeneratedAd;
 
   static GeneratedAd fromRow(Map<String, dynamic> row) => GeneratedAd(
-        id: row[SupabaseColumns.id] as String,
-        userId: row[SupabaseColumns.userId] as String,
-        imageUrl: row[SupabaseColumns.imageUrl] as String,
-        thumbnailUrl: row[SupabaseColumns.thumbnailUrl] as String?,
-        backgroundStyle: row[SupabaseColumns.backgroundStyle] as String?,
-        captionHindi: row[SupabaseColumns.captionHindi] as String?,
-        captionEnglish: row[SupabaseColumns.captionEnglish] as String?,
-        shareCount: row['sharecount'] as int? ?? 0,
-        downloadCount: row['downloadcount'] as int? ?? 0,
-        festivalTag: row['festivaltag'] as String?,
-        createdAt: DateTime.parse(row[SupabaseColumns.createdAt] as String),
+      id: row['id'] as String,
+      userId: row[FirestoreFields.userId] as String,
+      imageUrl: row[FirestoreFields.imageUrl] as String,
+      thumbnailUrl: row[FirestoreFields.thumbnailUrl] as String?,
+      backgroundStyle: row[FirestoreFields.backgroundStyle] as String?,
+      captionHindi: row[FirestoreFields.captionHindi] as String?,
+      captionEnglish: row[FirestoreFields.captionEnglish] as String?,
+      shareCount: row[FirestoreFields.shareCount] as int? ?? 0,
+      downloadCount: row[FirestoreFields.downloadCount] as int? ?? 0,
+      festivalTag: row[FirestoreFields.festivalTag] as String?,
+      createdAt: DateTime.parse(row[FirestoreFields.createdAt] as String),
       );
 }

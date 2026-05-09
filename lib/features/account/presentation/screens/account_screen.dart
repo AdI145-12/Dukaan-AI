@@ -24,7 +24,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 const String _helpSupportUrl = 'https://wa.me/91XXXXXXXXXX';
 const String _playStoreUrl =
-    'https://play.google.com/store/apps/details?id=prachar.web.app';
+  'https://play.google.com/store/apps/details?id=com.dukaanai.app';
 const String _privacyPolicyUrl = 'https://dukaanai.app/privacy-policy';
 
 final FutureProvider<AccountProfile> accountProfileProvider =

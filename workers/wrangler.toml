@@ -1,6 +1,19 @@
-# Routes, KV bindings, env var declaration
 [triggers]
-crons = ["30 0 * * *"]
+crons = ["30 2 * * *"]
 
 [vars]
 FIREBASE_PROJECT_ID = "dukaanai-68da7"
+OPENROUTER_MODEL = "openai/gpt-4o-mini"
+
+[[kv_namespaces]]
+binding = "RATE_LIMIT_KV"
+id = "0d226c9a6015413daf1cadaedafaeb91"
+preview_id = "6caf7d39d69745a48d13284485c760eb"
+
+[[kv_namespaces]]
+binding = "CACHEKV"
+id = "e692fbb756ca453b854ac21d3ad03d8b"
+preview_id = "87a0afd4d7fd425a8a4f79f7523741d2"
+
+[observability]
+enabled = true

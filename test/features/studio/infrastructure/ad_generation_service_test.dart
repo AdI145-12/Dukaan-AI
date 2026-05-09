@@ -26,7 +26,7 @@ void main() {
   final GeneratedAd testAd = GeneratedAd(
     id: 'ad-001',
     userId: 'user-1',
-    imageUrl: 'https://supabase.example/signed-url.jpg',
+    imageUrl: 'https://example.com/signed-url.jpg',
     backgroundStyle: 'diwali',
     shareCount: 0,
     downloadCount: 0,

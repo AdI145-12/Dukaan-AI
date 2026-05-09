@@ -6,6 +6,7 @@ plugins {
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
     id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
 }
 
 val keyPropertiesFile = rootProject.file("key.properties")
@@ -16,7 +17,7 @@ val keyProperties = Properties().apply {
 }
 
 android {
-    namespace = "prachar.web.app"
+    namespace = "com.dukaanai.app"
     compileSdk = 36
     ndkVersion = flutter.ndkVersion
 
@@ -31,8 +32,8 @@ android {
     }
 
     defaultConfig {
-        applicationId = "prachar.web.app"
-        testApplicationId = "prachar.web.app.test"
+        applicationId = "com.dukaanai.app"
+        testApplicationId = "com.dukaanai.app.test"
         minSdk = flutter.minSdkVersion
         targetSdk = 35
         versionCode = flutter.versionCode

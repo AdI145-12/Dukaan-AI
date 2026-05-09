@@ -1,1 +1,0 @@
--- User profiles table with Stripe customer ID

@@ -46,7 +46,7 @@ and building for low-end Android devices in the Indian market.
 - Identify the exact pattern: provider structure, state shape, error handling
 
 **Step 3 — Verify APIs**
-- Use context7 for any Riverpod, Supabase, GoRouter, or Flutter API you will use
+- Use context7 for any Riverpod, Firebase, GoRouter, or Flutter API you will use
 - Never write a method signature from memory — verify it
 
 **Step 4 — Implement**
@@ -68,7 +68,7 @@ Before finishing, check:
 - Create new files if extending an existing one is sufficient
 - Import feature A from feature B
 - Use setState() in a ConsumerWidget
-- Call Supabase directly from a widget or screen
+- Call Firebase services directly from a widget or screen
 - Use print() — always suggest logger.dart
 - Hardcode strings, colors, or spacing values
 

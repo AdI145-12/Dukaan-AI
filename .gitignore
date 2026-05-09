@@ -48,6 +48,11 @@ app.*.map.json
 android/key.properties
 android/keystore/
 workers/.dev.vars
+.env.local
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
+analyze_machine.txt
+ref images/
 **/*.jks
 **/*.keystore
 
@@ -58,3 +63,5 @@ workers/node_modules/
 # Build outputs
 workers/dist/
 .wrangler/
+android/build/"android/app/src/google-services.json" 
+android/app/src/google-services.json 

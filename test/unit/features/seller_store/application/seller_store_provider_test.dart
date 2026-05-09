@@ -136,7 +136,7 @@ void main() {
       when(
         () => mockRepository.saveSettings(settings: any(named: 'settings')),
       ).thenThrow(
-        const AppException.supabase('slug taken'),
+        const AppException.firebase('slug taken'),
       );
 
       final ProviderContainer container = createContainer();

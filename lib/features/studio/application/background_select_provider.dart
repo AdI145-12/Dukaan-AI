@@ -1,6 +1,6 @@
 import 'package:dukaan_ai/core/constants/app_strings.dart';
 import 'package:dukaan_ai/core/errors/app_exception.dart';
-import 'package:dukaan_ai/core/providers/shared_providers.dart';
+import 'package:dukaan_ai/core/firebase/firebase_service.dart';
 import 'package:dukaan_ai/features/studio/application/background_select_state.dart';
 import 'package:dukaan_ai/features/studio/application/studio_provider.dart';
 import 'package:dukaan_ai/features/studio/domain/ad_creation_request.dart';
@@ -35,7 +35,7 @@ class BackgroundSelect extends _$BackgroundSelect {
       return;
     }
 
-    final String userId = ref.read(supabaseClientProvider).auth.currentUser?.id ?? '';
+    final String userId = FirebaseService.currentUserId ?? '';
     final BackgroundStyle style = BackgroundStyle.all[selectedIndex];
 
     state = state.copyWith(

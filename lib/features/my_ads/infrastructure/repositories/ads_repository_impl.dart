@@ -1,1 +1,1 @@
-// Supabase .range() pagination impl
+// Firestore pagination repository stub

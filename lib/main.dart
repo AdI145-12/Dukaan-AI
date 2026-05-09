@@ -1,3 +1,6 @@
+import 'dart:ui';
+
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:dukaan_ai/core/constants/app_strings.dart';
 import 'package:dukaan_ai/core/firebase/firebase_service.dart';
 import 'package:dukaan_ai/core/services/local_notification_service.dart';
@@ -18,6 +21,11 @@ Future<void> main() async {
       options: DefaultFirebaseOptions.currentPlatform,
     );
   }
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+  PlatformDispatcher.instance.onError = (Object error, StackTrace stack) {
+    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    return true;
+  };
   // DEV ONLY: best-effort anonymous sign-in for SKIP_AUTH local runs.
   if (const bool.fromEnvironment('SKIP_AUTH') &&
       FirebaseService.currentUserId == null) {

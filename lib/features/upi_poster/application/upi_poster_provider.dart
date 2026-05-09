@@ -1,1 +1,1 @@
-// Local state only — no Supabase
+// Local state only — no backend dependency

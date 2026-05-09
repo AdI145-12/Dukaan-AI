@@ -1,5 +1,5 @@
 import 'package:dukaan_ai/core/errors/app_exception.dart';
-import 'package:dukaan_ai/core/providers/shared_providers.dart';
+import 'package:dukaan_ai/core/firebase/firebase_service.dart';
 import 'package:dukaan_ai/features/studio/application/studio_provider.dart';
 import 'package:dukaan_ai/features/studio/application/studio_state.dart';
 import 'package:dukaan_ai/features/studio/domain/generated_ad.dart';
@@ -8,36 +8,42 @@ import 'package:dukaan_ai/shared/domain/user_profile.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class MockStudioRepository extends Mock implements StudioRepository {}
-class MockSupabaseClient extends Mock implements SupabaseClient {}
-class MockGoTrueClient extends Mock implements GoTrueClient {}
+
+class _FakeUser {
+  const _FakeUser(this.uid);
+
+  final String uid;
+}
+
+class _FakeAuth {
+  const _FakeAuth({this.currentUser});
+
+  final _FakeUser? currentUser;
+}
 
 void main() {
   const String userId = '00000000-0000-0000-0000-000000000123';
 
   late MockStudioRepository mockStudioRepository;
-  late MockSupabaseClient mockSupabaseClient;
-  late MockGoTrueClient mockGoTrueClient;
 
   setUp(() {
+    FirebaseService.clearOverrides();
     mockStudioRepository = MockStudioRepository();
-    mockSupabaseClient = MockSupabaseClient();
-    mockGoTrueClient = MockGoTrueClient();
-    when(() => mockSupabaseClient.auth).thenReturn(mockGoTrueClient);
   });
 
-  ProviderContainer createContainer({
-    required Stream<AuthState> authStateStream,
-    required User? currentUser,
-  }) {
-    when(() => mockGoTrueClient.currentUser).thenReturn(currentUser);
+  tearDown(FirebaseService.clearOverrides);
+
+  ProviderContainer createContainer({required String? currentUserId}) {
+    FirebaseService.setAuthOverride(
+      _FakeAuth(
+        currentUser: currentUserId == null ? null : _FakeUser(currentUserId),
+      ),
+    );
 
     final ProviderContainer container = ProviderContainer(
       overrides: [
-        authStateProvider.overrideWith((Ref ref) => authStateStream),
-        supabaseClientProvider.overrideWith((Ref ref) => mockSupabaseClient),
         studioRepositoryProvider.overrideWith(
           (Ref ref) => mockStudioRepository,
         ),
@@ -56,12 +62,7 @@ void main() {
       () => mockStudioRepository.getProfile(userId: userId),
     ).thenAnswer((_) async => testProfile());
 
-    final ProviderContainer container = createContainer(
-      authStateStream: Stream<AuthState>.value(
-        AuthState(AuthChangeEvent.signedIn, signedInSession(userId: userId)),
-      ),
-      currentUser: userWithId(userId),
-    );
+    final ProviderContainer container = createContainer(currentUserId: userId);
 
     final StudioState state = await container.read(studioProvider.future);
 
@@ -71,12 +72,7 @@ void main() {
   });
 
   test('build returns empty StudioState when userId is null', () async {
-    final ProviderContainer container = createContainer(
-      authStateStream: Stream<AuthState>.value(
-        const AuthState(AuthChangeEvent.signedOut, null),
-      ),
-      currentUser: null,
-    );
+    final ProviderContainer container = createContainer(currentUserId: null);
 
     final StudioState state = await container.read(studioProvider.future);
 
@@ -90,21 +86,16 @@ void main() {
     );
   });
 
-  test('build propagates AppException.supabase from repo.getRecentAds',
+  test('build propagates AppException.firebase from repo.getRecentAds',
       () async {
     when(
       () => mockStudioRepository.getRecentAds(userId: userId, limit: 3),
-    ).thenThrow(const AppException.supabase('DB failed'));
+    ).thenThrow(const AppException.firebase('DB failed'));
     when(
       () => mockStudioRepository.getProfile(userId: userId),
     ).thenAnswer((_) async => testProfile());
 
-    final ProviderContainer container = createContainer(
-      authStateStream: Stream<AuthState>.value(
-        AuthState(AuthChangeEvent.signedIn, signedInSession(userId: userId)),
-      ),
-      currentUser: userWithId(userId),
-    );
+    final ProviderContainer container = createContainer(currentUserId: userId);
 
     final ProviderSubscription<AsyncValue<StudioState>> subscription =
         container.listen(studioProvider, (_, __) {});
@@ -114,7 +105,7 @@ void main() {
 
     final AsyncValue<StudioState> state = subscription.read();
     expect(state.hasError, isTrue);
-    expect(state.error, isA<SupabaseAppException>());
+    expect(state.error, isA<FirebaseAppException>());
   });
 
   test('build requests max 3 recent ads from repository', () async {
@@ -132,12 +123,7 @@ void main() {
       () => mockStudioRepository.getProfile(userId: userId),
     ).thenAnswer((_) async => testProfile());
 
-    final ProviderContainer container = createContainer(
-      authStateStream: Stream<AuthState>.value(
-        AuthState(AuthChangeEvent.signedIn, signedInSession(userId: userId)),
-      ),
-      currentUser: userWithId(userId),
-    );
+    final ProviderContainer container = createContainer(currentUserId: userId);
 
     await container.read(studioProvider.future);
 
@@ -154,12 +140,7 @@ void main() {
       () => mockStudioRepository.getProfile(userId: userId),
     ).thenAnswer((_) async => testProfile());
 
-    final ProviderContainer container = createContainer(
-      authStateStream: Stream<AuthState>.value(
-        AuthState(AuthChangeEvent.signedIn, signedInSession(userId: userId)),
-      ),
-      currentUser: userWithId(userId),
-    );
+    final ProviderContainer container = createContainer(currentUserId: userId);
 
     await container.read(studioProvider.future);
     await container.read(studioProvider.notifier).refresh();
@@ -190,29 +171,5 @@ UserProfile testProfile() {
     tier: 'free',
     creditsRemaining: 3,
     language: 'hinglish',
-  );
-}
-
-Session signedInSession({required String userId}) {
-  return Session(
-    accessToken: 'test-access-token',
-    tokenType: 'bearer',
-    user: User(
-      id: userId,
-      appMetadata: const <String, Object?>{},
-      userMetadata: const <String, Object?>{},
-      aud: 'authenticated',
-      createdAt: DateTime(2026, 1, 1).toIso8601String(),
-    ),
-  );
-}
-
-User userWithId(String userId) {
-  return User(
-    id: userId,
-    appMetadata: const <String, Object?>{},
-    userMetadata: const <String, Object?>{},
-    aud: 'authenticated',
-    createdAt: DateTime(2026, 1, 1).toIso8601String(),
   );
 }

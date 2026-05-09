@@ -1,4 +1,5 @@
 import 'package:dukaan_ai/core/firebase/firebase_service.dart';
+import 'package:dukaan_ai/core/constants/firestore_constants.dart';
 
 class KhataEntry {
   const KhataEntry({
@@ -23,18 +24,18 @@ class KhataEntry {
   final bool isSettled;
   final DateTime createdAt;
 
-  /// Maps a Supabase row from khataentries table to [KhataEntry].
+  /// Maps a Firestore-style row to [KhataEntry].
   factory KhataEntry.fromRow(Map<String, dynamic> row) {
     return KhataEntry(
       id: row['id'] as String,
-      userId: row['userid'] as String,
-      customerName: row['customername'] as String,
-      customerPhone: row['customerphone'] as String?,
-      amount: (row['amount'] as num).toDouble(),
-      type: row['type'] as String? ?? 'credit',
-      note: row['note'] as String?,
-      isSettled: (row['issettled'] as bool?) ?? false,
-      createdAt: DateTime.parse(row['createdat'] as String),
+      userId: row[FirestoreFields.userId] as String,
+      customerName: row[FirestoreFields.customerName] as String,
+      customerPhone: row[FirestoreFields.customerPhone] as String?,
+      amount: (row[FirestoreFields.amount] as num).toDouble(),
+      type: row[FirestoreFields.type] as String? ?? 'credit',
+      note: row[FirestoreFields.note] as String?,
+      isSettled: (row[FirestoreFields.isSettled] as bool?) ?? false,
+      createdAt: DateTime.parse(row[FirestoreFields.createdAt] as String),
     );
   }
 
