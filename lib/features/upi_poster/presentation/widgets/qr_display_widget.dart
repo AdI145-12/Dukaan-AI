@@ -1,0 +1,1 @@
+// QR code widget using qr_flutter

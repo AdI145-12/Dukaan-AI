@@ -1,0 +1,1 @@
+// Either<Failure, T> pattern for repository returns

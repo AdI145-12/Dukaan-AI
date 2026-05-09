@@ -1,0 +1,25 @@
+targets:
+  $default:
+    builders:
+      # ── Riverpod Generator ──────────────────────────────────
+      riverpod_generator:
+        generate_for:
+          include:
+            - lib/**
+            - test/**
+
+      # ── Freezed ─────────────────────────────────────────────
+      freezed:
+        generate_for:
+          include:
+            - lib/**
+            - test/**
+
+      # ── JSON Serializable ────────────────────────────────────
+      json_serializable:
+        generate_for:
+          include:
+            - lib/**
+        options:
+          explicit_to_json: true
+          include_if_null: false

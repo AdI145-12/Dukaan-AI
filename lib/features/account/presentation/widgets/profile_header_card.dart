@@ -1,0 +1,1 @@
+// Orange gradient: avatar + info

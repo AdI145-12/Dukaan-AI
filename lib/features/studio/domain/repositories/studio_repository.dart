@@ -1,0 +1,1 @@
+// Abstract: removeBackground, generateBg, saveAd

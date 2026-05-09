@@ -1,0 +1,1 @@
+// @freezed: success/failure with message

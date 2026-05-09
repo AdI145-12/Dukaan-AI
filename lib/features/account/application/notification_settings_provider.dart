@@ -1,0 +1,1 @@
+// FCM token + permissions state

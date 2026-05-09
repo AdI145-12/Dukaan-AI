@@ -1,0 +1,1 @@
+// @freezed: ads, filter, hasMore

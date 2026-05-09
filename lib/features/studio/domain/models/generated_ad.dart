@@ -1,0 +1,1 @@
+// @freezed: id, imageUrl, caption

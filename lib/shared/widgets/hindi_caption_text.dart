@@ -1,0 +1,1 @@
+// Text widget configured for Devanagari

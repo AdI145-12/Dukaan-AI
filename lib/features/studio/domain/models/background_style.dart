@@ -1,0 +1,1 @@
+// enum + metadata: palace theme, sunset, etc

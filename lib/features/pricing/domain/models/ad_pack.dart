@@ -1,0 +1,1 @@
+// @freezed: id, label, price, credits

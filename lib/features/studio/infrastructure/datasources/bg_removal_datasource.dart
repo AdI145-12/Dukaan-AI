@@ -1,0 +1,1 @@
+// Calls Worker /api/remove-bg

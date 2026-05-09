@@ -1,0 +1,6 @@
+# Routes, KV bindings, env var declaration
+[triggers]
+crons = ["30 0 * * *"]
+
+[vars]
+FIREBASE_PROJECT_ID = "dukaanai-68da7"

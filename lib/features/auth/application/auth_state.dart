@@ -1,0 +1,1 @@
+// @freezed AuthState: initial/otpSent/verified

@@ -1,0 +1,1 @@
+// Supabase row types (mirrors DB schema)

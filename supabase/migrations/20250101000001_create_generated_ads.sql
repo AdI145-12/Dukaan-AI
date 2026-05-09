@@ -1,0 +1,1 @@
+-- Generated ad records with credit cost tracking

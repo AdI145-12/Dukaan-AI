@@ -1,0 +1,1 @@
+// @riverpod AsyncNotifier<UserProfile> auth

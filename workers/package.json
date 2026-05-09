@@ -1,0 +1,16 @@
+{
+	"name": "dukaan-ai-workers",
+	"version": "1.0.0",
+	"private": true,
+	"scripts": {
+		"dev": "wrangler dev --local",
+		"deploy": "wrangler deploy",
+		"test": "vitest run"
+	},
+	"devDependencies": {
+		"@cloudflare/workers-types": "^4.20260401.0",
+		"typescript": "^5.0.0",
+		"vitest": "^1.6.0",
+		"wrangler": "^3.0.0"
+	}
+}

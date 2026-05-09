@@ -1,0 +1,1 @@
+// Output interfaces (success/error shapes)

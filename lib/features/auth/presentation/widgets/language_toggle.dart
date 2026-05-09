@@ -1,0 +1,1 @@
+// हिदी / Hinglish / English pill toggle

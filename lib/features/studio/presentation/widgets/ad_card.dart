@@ -1,0 +1,1 @@
+// Thumbnail + date + share icon

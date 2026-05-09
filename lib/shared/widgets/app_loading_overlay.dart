@@ -1,0 +1,1 @@
+// Full-screen overlay with Lottie + text

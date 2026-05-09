@@ -1,0 +1,1 @@
+// @freezed: productImage, style, caption

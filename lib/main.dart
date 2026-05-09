@@ -1,0 +1,59 @@
+import 'package:dukaan_ai/core/constants/app_strings.dart';
+import 'package:dukaan_ai/core/firebase/firebase_service.dart';
+import 'package:dukaan_ai/core/services/local_notification_service.dart';
+import 'package:dukaan_ai/core/services/notification_service.dart';
+import 'package:dukaan_ai/core/router/app_router.dart';
+import 'package:dukaan_ai/core/theme/app_theme.dart';
+import 'package:dukaan_ai/firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  if (Firebase.apps.isEmpty) {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  }
+  // DEV ONLY: best-effort anonymous sign-in for SKIP_AUTH local runs.
+  if (const bool.fromEnvironment('SKIP_AUTH') &&
+      FirebaseService.currentUserId == null) {
+    try {
+      await FirebaseService.auth.signInAnonymously();
+      debugPrint(
+        '[DEV] SKIP_AUTH anonymous sign-in -> ${FirebaseService.currentUserId}',
+      );
+    } catch (error) {
+      debugPrint('[DEV] SKIP_AUTH anonymous sign-in failed: $error');
+    }
+  }
+  await NotificationService.init();
+  await LocalNotificationService.instance.initialize();
+  // TODO: Add [firebase_options.dart](http://_vscodecontentref_/3) after running:
+  // flutterfire configure --project=<your-project-id>
+
+  runApp(
+    const ProviderScope(
+      child: DukaanApp(),
+    ),
+  );
+}
+
+class DukaanApp extends ConsumerWidget {
+  const DukaanApp({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final GoRouter router = ref.watch(appRouterProvider);
+
+    return MaterialApp.router(
+      routerConfig: router,
+      theme: AppTheme.light(),
+      debugShowCheckedModeBanner: false,
+      title: AppStrings.appName,
+    );
+  }
+}

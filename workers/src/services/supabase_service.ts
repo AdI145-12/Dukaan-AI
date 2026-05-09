@@ -1,0 +1,1 @@
+// Fetch/update Supabase rows via REST

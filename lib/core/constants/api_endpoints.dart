@@ -1,0 +1,1 @@
+// Worker endpoint paths: ApiEndpoint.removeBg

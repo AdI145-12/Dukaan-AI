@@ -1,0 +1,1 @@
+// Real-time network status (offline banner)

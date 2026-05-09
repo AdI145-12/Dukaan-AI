@@ -1,0 +1,1 @@
+// Reads env vars: Supabase URL/key, Worker URL

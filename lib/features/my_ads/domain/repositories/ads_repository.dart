@@ -1,0 +1,1 @@
+// Abstract: getAdsPaginated, deleteAd, exportAds

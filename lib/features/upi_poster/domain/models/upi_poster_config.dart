@@ -1,0 +1,1 @@
+// @freezed: shopName, upiId, theme

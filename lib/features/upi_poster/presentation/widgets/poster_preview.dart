@@ -1,0 +1,1 @@
+// Canvas-rendered poster preview

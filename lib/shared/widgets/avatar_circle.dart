@@ -1,0 +1,1 @@
+// Colored circle with first letter (hash-based)

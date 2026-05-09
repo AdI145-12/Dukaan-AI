@@ -1,0 +1,1 @@
+// @freezed: entries, totalPending

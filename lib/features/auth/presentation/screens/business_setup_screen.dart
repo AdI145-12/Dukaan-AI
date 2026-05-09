@@ -1,0 +1,1 @@
+// Screen 2: shop name + category input

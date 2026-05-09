@@ -1,0 +1,1 @@
+// enum UserTier { free, dukaan, vip }
