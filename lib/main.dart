@@ -16,16 +16,22 @@ import 'package:go_router/go_router.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  if (Firebase.apps.isEmpty) {
+  try {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
+  } on FirebaseException catch (e) {
+    // duplicate-app is thrown on hot restart because native Firebase
+    // is already initialised — safe to ignore.
+    if (e.code != 'duplicate-app') rethrow;
   }
+
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
   PlatformDispatcher.instance.onError = (Object error, StackTrace stack) {
     FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
     return true;
   };
+
   // DEV ONLY: best-effort anonymous sign-in for SKIP_AUTH local runs.
   if (const bool.fromEnvironment('SKIP_AUTH') &&
       FirebaseService.currentUserId == null) {
@@ -38,10 +44,9 @@ Future<void> main() async {
       debugPrint('[DEV] SKIP_AUTH anonymous sign-in failed: $error');
     }
   }
+
   await NotificationService.init();
   await LocalNotificationService.instance.initialize();
-  // TODO: Add [firebase_options.dart](http://_vscodecontentref_/3) after running:
-  // flutterfire configure --project=<your-project-id>
 
   runApp(
     const ProviderScope(
