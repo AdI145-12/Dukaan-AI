@@ -20,6 +20,14 @@ class AppStrings {
       'AI se professional ads banao,\nbilkul free mein.';
   static const String onboardingCta = 'Shuru Karein ->';
   static const String onboardingSkip = 'Skip karein';
+    static const String authBrandTitle = 'Dukaan AI';
+    static const String authBrandSubtitle = 'Empowering Small Business';
+    static const String authHeroLine = 'Unlock Your Business Potential.';
+    static const String authGoogleButton = 'Continue with Google';
+    static const String authPhoneButton = 'Continue with phone number';
+    static const String authTermsPrefix = 'Your data is safe with us. ';
+    static const String authTermsLabel = 'Terms apply.';
+    static const String authTermsUrl = 'https://dukaan-ai.app/terms';
   static const String shopSetupTitle = 'Apni dukaan ke baare mein batao';
   static const String shopNameLabel = 'Apna shop naam daalein';
   static const String shopNameHint = 'e.g. Ramu General Store';

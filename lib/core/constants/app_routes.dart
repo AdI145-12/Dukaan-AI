@@ -19,8 +19,11 @@ class AppRoutes {
   static const String orderSlipDetail = '/orders/:slipId';
   static const String onboarding = '/onboarding';
   static const String login = '/onboarding';
+  static const String googleAuth = '/onboarding';
   static const String onboardingSetup = '/onboarding/setup';
+  static const String businessSetup = '/onboarding/setup';
   static const String onboardingPhone = '/onboarding/phone';
+  static const String phoneAuth = '/onboarding/phone';
   static const String adPreview = '/studio/ad-preview';
   static const String adResult = '/studio/result';
   static const String backgroundSelect = '/studio/background-select';
@@ -46,8 +49,11 @@ class AppRoutes {
   static const String nameOrderSlipCreate = 'order-slip-create';
   static const String nameOrderSlipDetail = 'order-slip-detail';
   static const String nameOnboarding = 'onboarding';
+  static const String nameGoogleAuth = 'google-auth';
   static const String nameOnboardingSetup = 'onboarding-setup';
+  static const String nameBusinessSetup = 'business-setup';
   static const String nameOnboardingPhone = 'onboarding-phone';
+  static const String namePhoneAuth = 'phone-auth';
   static const String nameAdPreview = 'ad-preview';
   static const String nameAdResult = 'ad-result';
   static const String nameCameraCapture = 'camera-capture';

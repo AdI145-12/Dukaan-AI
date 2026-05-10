@@ -25,10 +25,12 @@ dependencies:
 
   # ── Firebase ─────────────────────────────────────────────────
   firebase_core: ^3.15.2
-  firebase_auth: ^5.3.4
-  cloud_firestore: ^5.5.0
+  firebase_auth: ^5.7.0
+  cloud_firestore: ^5.6.12
+  google_sign_in: ^6.2.1
   firebase_messaging: ^15.2.10
   firebase_storage: ^12.3.6
+  firebase_app_check: ^0.3.2+2 
 
   # ── Payments ─────────────────────────────────────────────────
   razorpay_flutter: ^1.4.3

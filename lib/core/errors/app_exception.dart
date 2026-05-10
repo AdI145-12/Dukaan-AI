@@ -4,6 +4,7 @@ sealed class AppException implements Exception {
 	final String message;
 
 	String get userMessage => switch (this) {
+		CancelledAppException() => message,
 		FirebaseAppException() => message,
 		StorageAppException() => message,
 		NetworkAppException() => message,
@@ -14,6 +15,7 @@ sealed class AppException implements Exception {
 		UnknownAppException() => message,
 	};
 
+	const factory AppException.cancelled(String message) = CancelledAppException;
 	const factory AppException.firebase(String message) = FirebaseAppException;
 	const factory AppException.storage(String message) = StorageAppException;
 	const factory AppException.network(String message) = NetworkAppException;
@@ -26,6 +28,10 @@ sealed class AppException implements Exception {
 
 final class FirebaseAppException extends AppException {
 	const FirebaseAppException(super.message);
+}
+
+final class CancelledAppException extends AppException {
+	const CancelledAppException(super.message);
 }
 
 final class StorageAppException extends AppException {
