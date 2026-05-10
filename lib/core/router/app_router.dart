@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../firebase/firebase_service.dart';
 import '../../features/account/presentation/screens/account_screen.dart';
 import '../../features/account/presentation/screens/edit_profile_screen.dart';
 import '../../features/account/presentation/screens/upi_settings_screen.dart';
@@ -10,11 +9,11 @@ import '../../features/catalogue/presentation/screens/create_catalogue_screen.da
 import '../../features/inquiry/presentation/screens/add_inquiry_screen.dart';
 import '../../features/inquiry/presentation/screens/inquiry_detail_screen.dart';
 import '../../features/inquiry/presentation/screens/inquiry_list_screen.dart';
+import '../../features/auth/presentation/screens/business_setup_screen.dart';
+import '../../features/auth/presentation/screens/google_auth_screen.dart';
+import '../../features/auth/presentation/screens/phone_auth_screen.dart';
 import '../../features/khata/presentation/screens/khata_screen.dart';
 import '../../features/my_ads/presentation/screens/my_ads_screen.dart';
-import '../../features/onboarding/presentation/screens/phone_auth_screen.dart';
-import '../../features/onboarding/presentation/screens/shop_setup_screen.dart';
-import '../../features/onboarding/presentation/screens/welcome_screen.dart';
 import '../../features/order_slip/domain/order_slip.dart';
 import '../../features/order_slip/presentation/screens/create_order_slip_screen.dart';
 import '../../features/order_slip/presentation/screens/order_slip_detail_screen.dart';
@@ -29,55 +28,24 @@ import '../../features/studio/presentation/screens/studio_screen.dart';
 import '../../features/studio/presentation/screens/whatsapp_broadcast_screen.dart';
 import '../../shared/widgets/app_shell_scaffold.dart';
 import '../constants/app_routes.dart';
+import 'router_guards.dart';
 
 part 'app_router.g.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey =
-    GlobalKey<NavigatorState>(debugLabel: 'root');
+  GlobalKey<NavigatorState>(debugLabel: 'root');
 final GlobalKey<NavigatorState> _studioNavKey =
-    GlobalKey<NavigatorState>(debugLabel: 'studio');
+  GlobalKey<NavigatorState>(debugLabel: 'studio');
 final GlobalKey<NavigatorState> _khataNavKey =
-    GlobalKey<NavigatorState>(debugLabel: 'khata');
+  GlobalKey<NavigatorState>(debugLabel: 'khata');
 final GlobalKey<NavigatorState> _myAdsNavKey =
-    GlobalKey<NavigatorState>(debugLabel: 'myads');
+  GlobalKey<NavigatorState>(debugLabel: 'myads');
 final GlobalKey<NavigatorState> _subscriptionNavKey =
-    GlobalKey<NavigatorState>(debugLabel: 'subscription');
+  GlobalKey<NavigatorState>(debugLabel: 'subscription');
 final GlobalKey<NavigatorState> _inquiryNavKey =
-    GlobalKey<NavigatorState>(debugLabel: 'inquiry');
+  GlobalKey<NavigatorState>(debugLabel: 'inquiry');
 final GlobalKey<NavigatorState> _accountNavKey =
-    GlobalKey<NavigatorState>(debugLabel: 'account');
-
-Future<bool> _hasShopProfile(String userId) async {
-  try {
-    final dynamic snapshot = await FirebaseService.db
-        .collection('users')
-        .doc(userId)
-        .get()
-        .timeout(
-          const Duration(seconds: 5),
-          onTimeout: () => throw Exception('Firestore timeout'),
-        );
-    final bool exists = snapshot.exists as bool? ?? false;
-    if (!exists) return false;
-
-    final dynamic raw = snapshot.data();
-    Map<String, dynamic> data = <String, dynamic>{};
-    if (raw is Map<String, dynamic>) {
-      data = raw;
-    } else if (raw is Map<Object?, Object?>) {
-      data = raw.map<String, dynamic>(
-        (Object? key, Object? value) => MapEntry(key.toString(), value),
-      );
-    }
-
-    final String shopName = data['shopName'] as String? ?? '';
-    return shopName.trim().isNotEmpty;
-  } catch (_) {
-    // On any error (network, timeout, auth) — treat as no profile
-    // so the user lands on onboarding rather than being stuck forever.
-    return false;
-  }
-}
+  GlobalKey<NavigatorState>(debugLabel: 'account');
 
 @riverpod
 GoRouter appRouter(Ref ref) {
@@ -85,56 +53,26 @@ GoRouter appRouter(Ref ref) {
     navigatorKey: _rootNavigatorKey,
     initialLocation: AppRoutes.studio,
     redirect: (BuildContext context, GoRouterState state) async {
-      if (const bool.fromEnvironment('SKIP_AUTH', defaultValue: false)) {
-        return null;
-      }
-
-      final bool isOnboarding =
-          state.matchedLocation.startsWith(AppRoutes.onboarding);
-      final String? userId = FirebaseService.currentUserId;
-
-      if (userId == null || userId.isEmpty) {
-        if (!isOnboarding) {
-          return AppRoutes.onboarding;
-        }
-        return null;
-      }
-
-      bool hasProfile = false;
-      try {
-        hasProfile = await _hasShopProfile(userId);
-      } catch (_) {
-        hasProfile = false;
-      }
-
-      if (!hasProfile && !isOnboarding) {
-        return AppRoutes.onboardingSetup;
-      }
-
-      if (isOnboarding && hasProfile) {
-        return AppRoutes.studio;
-      }
-
-      return null;
+      return authGuard(ref, state);
     },
     routes: <RouteBase>[
       GoRoute(
-        path: AppRoutes.onboarding,
-        name: AppRoutes.nameOnboarding,
+        path: AppRoutes.googleAuth,
+        name: AppRoutes.nameGoogleAuth,
         builder: (BuildContext context, GoRouterState state) {
-          return const WelcomeScreen();
+          return const GoogleAuthScreen();
         },
       ),
       GoRoute(
-        path: AppRoutes.onboardingSetup,
-        name: AppRoutes.nameOnboardingSetup,
+        path: AppRoutes.businessSetup,
+        name: AppRoutes.nameBusinessSetup,
         builder: (BuildContext context, GoRouterState state) {
-          return const ShopSetupScreen();
+          return const BusinessSetupScreen();
         },
       ),
       GoRoute(
-        path: AppRoutes.onboardingPhone,
-        name: AppRoutes.nameOnboardingPhone,
+        path: AppRoutes.phoneAuth,
+        name: AppRoutes.namePhoneAuth,
         builder: (BuildContext context, GoRouterState state) {
           return const PhoneAuthScreen();
         },
